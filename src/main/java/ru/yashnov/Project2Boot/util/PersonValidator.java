@@ -3,18 +3,17 @@ package ru.yashnov.Project2Boot.util;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import ru.yashnov.Project2Boot.dao.PersonDAO;
 import ru.yashnov.Project2Boot.models.Person;
+import ru.yashnov.Project2Boot.services.PeopleService;
 
 @Component
 public class PersonValidator implements Validator {
 
-    private final PersonDAO personDAO;
+    private final PeopleService peopleService;
 
-    public PersonValidator(PersonDAO personDAO) {
-        this.personDAO = personDAO;
+    public PersonValidator(PeopleService peopleService) {
+        this.peopleService = peopleService;
     }
-
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -25,7 +24,7 @@ public class PersonValidator implements Validator {
     public void validate(Object target, Errors errors) {
         Person person = (Person) target;
 
-        if (personDAO.show(person.getName()).isPresent()) {
+        if (peopleService.findPersonByName(person.getName()).isPresent()) {
             errors.rejectValue("name", "", "Пользователь с таким именем уже существует");
         }
     }

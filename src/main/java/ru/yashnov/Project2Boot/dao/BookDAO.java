@@ -7,7 +7,7 @@ import ru.yashnov.Project2Boot.models.Book;
 
 import java.util.List;
 
-
+// Более не используется
 @Component
 public class BookDAO {
     private final JdbcTemplate jdbcTemplate;

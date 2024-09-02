@@ -8,7 +8,7 @@ import ru.yashnov.Project2Boot.models.Person;
 import java.util.List;
 import java.util.Optional;
 
-
+// Более не используется
 @Component
 public class PersonDAO {
     private final JdbcTemplate jdbcTemplate;

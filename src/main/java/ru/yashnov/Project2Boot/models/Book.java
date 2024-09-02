@@ -1,22 +1,35 @@
 package ru.yashnov.Project2Boot.models;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
+@Entity
+@Table(name = "book")
 public class Book {
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @NotEmpty()
     @Size(min = 1, max = 100)
+    @Column(name = "title")
     private String title;
 
     @NotEmpty()
     @Size(min = 1, max = 100)
+    @Column(name = "author")
     private String author;
 
     @Min(value = 1900)
+    @Column(name = "year")
     private int year;
+
+    @ManyToOne
+    @JoinColumn(name = "person_id", referencedColumnName = "id")
+    private Person owner;
 
     public Book(long id, String title, String author, int year) {
         this.id = id;
@@ -60,13 +73,13 @@ public class Book {
         this.year = year;
     }
 
-    @Override
-    public String toString() {
-        return "Book{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", author='" + author + '\'' +
-                ", year=" + year +
-                '}';
+    public Person getOwner() {
+        return owner;
     }
+
+    public void setOwner(Person owner) {
+        this.owner = owner;
+    }
+
+
 }
