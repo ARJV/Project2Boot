@@ -51,7 +51,7 @@ public class BooksService {
         Optional<Person> person = peopleRepository.findById(personId);
         Optional<Book> book = bookRepository.findById(id);
 
-        if(book.isPresent() && person.isPresent()) book.get().setOwner(person.get());
+        if (book.isPresent() && person.isPresent()) book.get().setOwner(person.get());
     }
 
     @Transactional
@@ -64,5 +64,9 @@ public class BooksService {
         Book book = bookRepository.findById(id).orElse(null);
         if (book.getOwner() == null) return null;
         return book.getOwner().getName();
+    }
+
+    public List<Book> searchBooks(String q) {
+        return bookRepository.findBooksByTitleStartingWith(q);
     }
 }

@@ -90,4 +90,15 @@ public class BooksController {
         booksService.release(id);
         return "redirect:/books/" + id;
     }
+
+
+    @GetMapping("/search")
+    public String search(@RequestParam(name = "q", required = false) String q, Model model) {
+        if(q != null) {
+            model.addAttribute("query", true);
+            model.addAttribute("books", booksService.searchBooks(q));
+        }
+
+        return "books/search";
+    }
 }
