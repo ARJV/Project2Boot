@@ -1,5 +1,7 @@
 package ru.yashnov.Project2Boot.services;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.yashnov.Project2Boot.models.Book;
@@ -22,8 +24,11 @@ public class BooksService {
         this.peopleRepository = peopleRepository;
     }
 
-    public List<Book> findAll() {
-        return bookRepository.findAll();
+    public List<Book> findAll(Integer page, Integer booksPerPage, boolean sortByYear) {
+        Sort sort = sortByYear ? Sort.by("year") : Sort.unsorted();
+        return (booksPerPage != null)
+                ? bookRepository.findAll(PageRequest.of(page, booksPerPage, sort)).getContent()
+                : bookRepository.findAll(sort);
     }
 
     public Book findOne(int id) {
@@ -31,14 +36,14 @@ public class BooksService {
     }
 
     @Transactional
-    public void save(Book person) {
-        bookRepository.save(person);
+    public void save(Book book) {
+        bookRepository.save(book);
     }
 
     @Transactional
-    public void update(int id, Book updatePerson) {
-        updatePerson.setId(id);
-        bookRepository.save(updatePerson);
+    public void update(int id, Book updateBook) {
+        updateBook.setId(id);
+        bookRepository.save(updateBook);
     }
 
     @Transactional
@@ -62,7 +67,11 @@ public class BooksService {
 
     public String getOwnerNameByBookId(int id) {
         Book book = bookRepository.findById(id).orElse(null);
-        if (book.getOwner() == null) return null;
+
+        if (book == null || book.getOwner() == null) {
+            return null;
+        }
+
         return book.getOwner().getName();
     }
 

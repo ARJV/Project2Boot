@@ -21,9 +21,13 @@ public class BooksController {
         this.peopleService = peopleService;
     }
 
-    @GetMapping()
-    public String index(Model model) {
-        model.addAttribute("books", booksService.findAll());
+    @GetMapping
+    public String index(Model model,
+                        @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+                        @RequestParam(name = "books_per_page", required = false) Integer booksPerPage,
+                        @RequestParam(name = "sort_by_year", required = false, defaultValue = "false") Boolean sortByYear) {
+
+        model.addAttribute("books", booksService.findAll(page, booksPerPage, sortByYear));
         return "books/index";
     }
 
@@ -80,8 +84,8 @@ public class BooksController {
     }
 
     @PatchMapping("/{id}/assign")
-    public String assign(@PathVariable("id") int id, @RequestParam("person_id") int person_id) {
-        booksService.assign(id, person_id);
+    public String assign(@PathVariable("id") int id, @RequestParam("person_id") int personId) {
+        booksService.assign(id, personId);
         return "redirect:/books/" + id;
     }
 
@@ -94,7 +98,7 @@ public class BooksController {
 
     @GetMapping("/search")
     public String search(@RequestParam(name = "q", required = false) String q, Model model) {
-        if(q != null) {
+        if (q != null) {
             model.addAttribute("query", true);
             model.addAttribute("books", booksService.searchBooks(q));
         }
